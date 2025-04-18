@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+      /* Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Wrapper Fade In */
+.form-wrapper {
+  max-width: 500px;
+  margin: 60px auto;
+  animation: fadeInUp 1s ease forwards;
+}
+
+/* Form */
+#contactForm {
+  background: #1e1e2f;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Form Group */
+.form-group {
+  position: relative;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  background: #2b2b3c;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #6c63ff;
+}
+
+/* Floating Labels */
+.form-group label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none;
+  transition: 0.2s ease;
+  background: #1e1e2f;
+  padding: 0 5px;
+}
+
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label,
+.form-group textarea:focus + label,
+.form-group textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  font-size: 0.8rem;
+  color: #6c63ff;
+}
+
+/* Button */
+#contactForm button {
+  padding: 12px;
+  background: #6c63ff;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#contactForm button:hover {
+  background: #5848e5;
+}
+
+    </style>
+</head>
+<body>
+    <!-- <form action="https://formspree.io/f/mldjknjz" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+      
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+      
+        <label for="message">Message:</label>
+        <textarea name="message" required></textarea>
+      
+        <button type="submit">Send</button>
+      </form>
+       -->
+       <div class="form-wrapper">
+        <form id="contactForm">
+          <div class="form-group">
+            <input type="text" name="name" required />
+            <label>Your Name</label>
+          </div>
+          <div class="form-group">
+            <input type="email" name="email" required />
+            <label>Your Email</label>
+          </div>
+          <div class="form-group">
+            <textarea name="message" required></textarea>
+            <label>Your Message</label>
+          </div>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+      
+      
+      <script>const form = document.getElementById("contactForm");
+        const submitButton = form.querySelector("button");
+        
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+        
+          // Disable the button to prevent repeat submits
+          submitButton.disabled = true;
+          submitButton.textContent = "Sending...";
+        
+          const data = {
+            name: form.name.value,
+            email: form.email.value,
+            message: form.message.value,
+          };
+        
+          try {
+            const response = await fetch("http://localhost:3000/send", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+        
+            const result = await response.text();
+        
+            if (response.ok) {
+              alert("✅ Email sent successfully!");
+              form.reset();
+            } else {
+              alert("❌ Error: " + result);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("❌ Network error or backend is down.");
+          } finally {
+            // Re-enable button after sending
+            submitButton.disabled = false;
+            submitButton.textContent = "Send";
+          }
+        });
+      </script>      
+      
+      
+    
+</body>
+</html>
