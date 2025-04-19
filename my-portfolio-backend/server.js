@@ -1,31 +1,47 @@
+const express = require("express");
+const nodemailer = require("nodemailer");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+require("dotenv").config();
 
-let lastSentTime = null;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.post('/send', async (req, res) => {
-  const now = Date.now();
-  
-  // Block sending if already sent in last 30 seconds
-  if (lastSentTime && now - lastSentTime < 30 * 1000) {
-    return res.status(429).send('Please wait before sending another message.');
-  }
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static("public")); // serve your frontend HTML
 
+// Gmail transporter setup
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
+
+
+// Email send endpoint
+app.post("/send", async (req, res) => {
   const { name, email, message } = req.body;
-  
 
   const mailOptions = {
     from: email,
-    to: 'theprinceraj577@gmail.com',
+    to: process.env.GMAIL_USER,
     subject: `Message from ${name}`,
     text: message,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    res.status(200).send('Email sent successfully!');
+    res.status(200).send("Email sent successfully!");
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Error sending email.');
+    console.error("Error sending mail:", err);
+    res.status(500).send("Failed to send email.");
   }
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+// Start server
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+});
