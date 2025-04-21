@@ -26,11 +26,21 @@ app.post("/send", async (req, res) => {
   const { name, email, message } = req.body;
 
   const mailOptions = {
-    from: email,
+    from: `"${name}" <${process.env.GMAIL_USER}>`, // Shows sender name, but from your Gmail
     to: process.env.GMAIL_USER,
     subject: `Message from ${name}`,
-    text: message,
+    replyTo: email, // This makes the reply go to the sender
+    text: `
+  You have a new message from your portfolio form:
+  
+  Name: ${name}
+  Email: ${email}
+  
+  Message:
+  ${message}
+    `.trim(),
   };
+  
 
   try {
     await transporter.sendMail(mailOptions);
