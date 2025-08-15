@@ -19,7 +19,7 @@ const themeToggle = document.getElementById('themeToggle');
 
     //character animated
     document.addEventListener("DOMContentLoaded", function () {
-        const textArray = ["Web Developer", "Graphics Designer", "Web Designer", "Video Editor"];
+        const textArray = ["Web Developer", "Web Designer", "Video Editor"];
         let index = 0;
         const textElement = document.getElementById("animatedText");
 

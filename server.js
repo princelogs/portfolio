@@ -25,6 +25,13 @@ const transporter = nodemailer.createTransport({
 app.post("/send", async (req, res) => {
   const { name, email, message } = req.body;
 
+  // const mailOptions = {
+  //   from: email,
+  //   to: process.env.GMAIL_USER,
+  //   subject: `Message from ${name}`,
+  //   text: message,
+  // };
+
   const mailOptions = {
     from: `"${name}" <${process.env.GMAIL_USER}>`, // Shows sender name, but from your Gmail
     to: process.env.GMAIL_USER,
@@ -34,13 +41,13 @@ app.post("/send", async (req, res) => {
   You have a new message from your portfolio form:
   
   Name: ${name}
-  Email: ${email}
+Email: ${email}
   
   Message:
   ${message}
     `.trim(),
   };
-  
+
 
   try {
     await transporter.sendMail(mailOptions);
